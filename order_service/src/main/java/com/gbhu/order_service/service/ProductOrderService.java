@@ -13,4 +13,12 @@ public interface ProductOrderService {
      * @return
      */
     ProductOrder save(int userId, int productId);
+
+    /**
+     * 下单
+     * @param userId
+     * @param productId
+     * @return
+     */
+    ProductOrder saveByFeign(int userId, int productId);
 }

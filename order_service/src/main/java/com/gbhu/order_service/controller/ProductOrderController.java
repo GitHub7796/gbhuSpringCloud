@@ -17,7 +17,8 @@ public class ProductOrderController {
     @RequestMapping("save")
     public Object save(@RequestParam("user_id") int userId,
                        @RequestParam("product_id") int productId) {
-        return productOrderService.save(userId, productId);
+//        return productOrderService.save(userId, productId);
+        return productOrderService.saveByFeign(userId, productId);
     }
 
 }
