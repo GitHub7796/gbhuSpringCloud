@@ -1,0 +1,26 @@
+server:
+  port: 9000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  application:
+    name: api-gateway
+
+#    自定义路由映射
+zuul:
+  routes:
+#    /order-service/api/v1/order/save
+#    自定义如下
+#    /apigateway/api/v1/order/save
+    order-service: /apigateway/order/**
+    product-service: /apigateway/product/**
+#    统一入口为上面的配置，其他入口忽略
+  ignored-patterns: /*-service/**
+#  设置过滤的请求头为空
+  sensitive-headers:
+#  忽略整个服务
+#  ignored-services: product-service
+#  忽略某个接口
+#  ignored-patterns: /*-service/api/v1/order/save
