@@ -5,6 +5,8 @@ import com.gbhu.order_service.domain.ProductOrder;
 import com.gbhu.order_service.service.ProductClient;
 import com.gbhu.order_service.service.ProductOrderService;
 import com.gbhu.order_service.utils.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.UUID;
 
 @Service
 public class ProductOrderServiceImpl implements ProductOrderService {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private RestTemplate restTemplate;
@@ -44,6 +47,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
     @Override
     public ProductOrder saveByFeign(int userId, int productId) {
+        logger.info("order-service saveByFeign");
         //调动商品服务获取商品详情
         String json = productClient.findById(productId);
         //转化 json 字符串

@@ -19,7 +19,7 @@ zuul:
 #    统一入口为上面的配置，其他入口忽略
   ignored-patterns: /*-service/**
 #  设置过滤的请求头为空
-  sensitive-headers:
+#  sensitive-headers:
 #  忽略整个服务
 #  ignored-services: product-service
 #  忽略某个接口

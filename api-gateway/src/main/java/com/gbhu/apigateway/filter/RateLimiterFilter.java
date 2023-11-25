@@ -1,9 +1,9 @@
-package com.gbhu.filter;
+package com.gbhu.apigateway.filter;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -11,68 +11,49 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 
+/**
+ * 订单限流
+ */
 @Component
-public class LoginFilter extends ZuulFilter {
-    /**
-     * 过滤器类型，前中后过滤
-     * @return
-     */
+public class RateLimiterFilter extends ZuulFilter {
+
+    //每秒产生100个令牌
+    private static final RateLimiter RATE_LIMITER = RateLimiter.create(100);
     @Override
     public String filterType() {
         return PRE_TYPE;
     }
 
-    /**
-     * 过滤器优先级，order越小越优先
-     * @return
-     */
     @Override
     public int filterOrder() {
-        return 4;
+        // 限流要在最前面,源码中过滤器最小是-3
+        return -4;
     }
 
-    /**
-     * 过滤器是否生效
-     * @return
-     */
     @Override
     public boolean shouldFilter() {
-
         //前中后过滤器 共享 RequestContext 对象
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
-
-        System.out.println(request.getRequestURI());
-        System.out.println(request.getRequestURL());
-
-//        过滤特性接口
+        //只对订单限流
         if ("/apigateway/order/api/v1/order/save".equals(request.getRequestURI())) {
+            //禁止访问
             return true;
         }
         return false;
     }
 
-    /**
-     * 业务逻辑
-     * @return
-     * @throws ZuulException
-     */
     @Override
     public Object run() throws ZuulException {
-
         //前中后过滤器 共享 RequestContext 对象
         RequestContext requestContext = RequestContext.getCurrentContext();
-        HttpServletRequest request = requestContext.getRequest();
 
-        //获取token
-        String token = request.getHeader("token");
-
-        //JWT校验
-        if (StringUtils.isBlank(token)) {
+        if (!RATE_LIMITER.tryAcquire()) {
+            //限流
             requestContext.setSendZuulResponse(false);
-            requestContext.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());
-
+            requestContext.setResponseStatusCode(HttpStatus.TOO_MANY_REQUESTS.value());
         }
+
         return null;
     }
 }

@@ -14,3 +14,30 @@ spring:
 feign:
   hystrix:
     enabled: true
+redis:
+  database: 0
+  host: 127.0.0.1
+  port: 6379
+  timeout: 2000
+
+hystrix:
+  command:
+    default:
+#      上述 3 个是固定的，下述才是实际路径
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 4000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #开启所有的端点监控
+  #    zipkin 服务器所在url
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      #      配置采样比
+      probability: 1.0

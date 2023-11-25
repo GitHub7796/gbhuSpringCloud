@@ -2,13 +2,15 @@ package com.gbhu.product_server.service.impl;
 
 import com.gbhu.product_server.domain.Product;
 import com.gbhu.product_server.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private static final Map<Integer, Product> daoMap = new HashMap<>();
 
     static {
@@ -32,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
 
     public List<Product> listProduct() {
+        logger.info("product-service listProduct");
         Collection<Product> collection = daoMap.values();
         List<Product> list = new ArrayList<>(collection);
         return list;
@@ -39,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(int id) {
+        logger.info("product-service findById");
         return daoMap.get(id);
     }
 }
