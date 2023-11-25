@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/v1/product")
 public class ProductController {
@@ -21,11 +23,16 @@ public class ProductController {
 
     /**
      * 获取所有商品列表
+     *
      * @return
      */
     @RequestMapping("list")
-    public Object list() {
-      return   productService.listProduct();
+    public Object list(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        String cookie = request.getHeader("cookie");
+        System.out.println("token=" + token);
+        System.out.println("cookie=" + cookie);
+        return productService.listProduct();
     }
 
     /**
