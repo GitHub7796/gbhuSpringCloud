@@ -8,7 +8,12 @@ eureka:
 spring:
   application:
     name: order-service
-
+#     配置rabbitmq
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 #修改调用超时时间
 feign:

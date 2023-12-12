@@ -4,6 +4,7 @@ import com.gbhu.product_server.domain.Product;
 import com.gbhu.product_server.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,11 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/product")
+@RefreshScope
 public class ProductController {
 
     @Value("${server.port}")
     private String port;
 
+    @Value("${env}")
+    private String env;
     @Autowired
     private ProductService productService;
 
@@ -43,7 +47,7 @@ public class ProductController {
     @RequestMapping("find")
     public Object findById(@RequestParam("id") int id) {
         Product product=productService.findById(id);
-        product.setName(product.getName()+"data from port="+port);
+        product.setName(product.getName()+"data from port="+port+"env="+env);
         return product;
     }
 

@@ -1,13 +1,17 @@
 server:
+#      端口
   port: 8771
-# ????????
+
 eureka:
   client:
     serviceUrl:
+#      注册中心地址
       defaultZone: http://localhost:8761/eureka/
-# ?????
+
+
 spring:
   application:
+#    服务名称
     name: product-service
 #    zipkin 服务器所在url
   zipkin:
@@ -16,4 +20,16 @@ spring:
     sampler:
 #      配置采样比
       probability: 1.0
+#     配置rabbitmq
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #开启所有的端点监控
 
